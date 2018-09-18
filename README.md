@@ -1,1 +1,1 @@
-# profanityTracker
+# profanity Badge
