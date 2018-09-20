@@ -1,5 +1,4 @@
 const fs = require('fs')
-const os = require('os')
 
 const main = (callback) => {
   const targetDir = './tests/'
@@ -10,11 +9,6 @@ const main = (callback) => {
 
   // Read profanity list
   const profanity = require(targetDir + '.profanity.json')
-
-  // Create regex list
-  var regexProfanityList = profanity.map((item) => {
-    return new RegExp(item, 'g')
-  })
 
   // For each file in target directory
   fs.readdir(targetDir, (err, files) => {
@@ -28,10 +22,27 @@ const main = (callback) => {
         // if (data) { console.log('\n' + data) }
         // ^ Logging ^
 
-        for (reg in regexProfanityList) {
-          console.log((data.match(reg) || []).length)
-          console.log(regexProfanityList[reg])
+        // Skip if requested
+        // TODO use RegEx to make sure disable is in comment
+        if (data.match('profanity-allow-all')){
+          return
         }
+
+        // Split file into list of lines
+        var fileLines = data.split('\n')
+
+        fileLines.forEach((line) => {
+          profanity.forEach((prof) => {
+            if (line.match(prof)) {
+              // TODO use RegEx to allow multiple disables per line
+              // TODO use RegEx to make sure disable is in comment
+              if (line.match('profanity-allow "' + prof + '"')) { // Enable disabling of profanity
+                return
+              }
+              console.log('!!Profanity found!! Line: ' + (fileLines.indexOf(line) + 1).toString() + ' Profanity: ' + prof)
+            }
+          })
+        })
       })
     })
   })
@@ -39,6 +50,7 @@ const main = (callback) => {
   callback(null, count)
 }
 
+// TODO Implement promise based system to resolve output ONLY when count is finished
 main((err, count) => {
   console.log('=====')
   console.log(count)
