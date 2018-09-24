@@ -23,8 +23,7 @@ const main = (callback) => {
         // ^ Logging ^
 
         // Skip if requested
-        // TODO use RegEx to make sure disable is in comment
-        if (data.match('profanity-allow-all')){
+        if (data.match('// profanity-allow-all')){
           return
         }
 
