@@ -18,8 +18,7 @@ const main = (callback) => {
 
         // v Logging v
         console.log('\n_--' + file + '--_') // Print filename
-        // if (err) { console.log('\n' + err) }
-        // if (data) { console.log('\n' + data) }
+        if (err) { console.log('\n' + err); return }
         // ^ Logging ^
 
         // Skip if requested
