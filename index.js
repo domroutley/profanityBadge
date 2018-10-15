@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const main = (callback) => {
+const main = new Promise(function(resolve, reject){
   const targetDir = './tests/'
   var count = 0
 
@@ -35,9 +35,11 @@ const main = (callback) => {
               // TODO use RegEx to allow multiple disables per line
               // TODO use RegEx to make sure disable is in comment
               if (line.match('profanity-allow "' + prof + '"')) { // Enable disabling of profanity
-                return
+                console.log('!!Profanity ignored!! Line: ' + (fileLines.indexOf(line) + 1).toString() + ' Profanity: ' + prof)
+              } else {
+                console.log('!!Profanity found!! Line: ' + (fileLines.indexOf(line) + 1).toString() + ' Profanity: ' + prof)
+                count = count + 1
               }
-              console.log('!!Profanity found!! Line: ' + (fileLines.indexOf(line) + 1).toString() + ' Profanity: ' + prof)
             }
           })
         })
@@ -45,12 +47,8 @@ const main = (callback) => {
     })
   })
 
-  callback(null, count)
-}
+  resolve(count)
+})
 
 // TODO Implement promise based system to resolve output ONLY when count is finished
-main((err, count) => {
-  console.log('=====')
-  console.log(count)
-  console.log('=====')
-})
+console.log(main)
